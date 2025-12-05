@@ -29,6 +29,17 @@ def topic(request, topic_id):
     return render(request, 'learning_logs/topic.html', context)
 
 @login_required
+def study(request, topic_id):
+    """Show a single topic and all its entries."""
+    topic = Topic.objects.get(id=topic_id)
+    # Make sure the topic belongs to the current user.
+    if topic.owner != request.user:
+        raise Http404
+    entries = topic.entry_set.order_by('?')
+    context = {'topic': topic, 'entries': entries}
+    return render(request, 'learning_logs/study.html', context)
+
+@login_required
 def new_topic(request):
     """Add a new topic."""
     if request.method != 'POST':

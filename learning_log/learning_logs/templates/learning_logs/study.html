@@ -1,20 +1,14 @@
-{% extends 'learning_logs/base.html' %}
-
-{% block page_header %}
-    <h1>{{ topic.text }} has been studied {{ topic.study_count }} times</h1>
-{% endblock page_header %}
+{% extends "learning_logs/base.html" %}
 
 {% block content %}
-    <p>
-        <a href="{% url 'learning_logs:new_entry' topic.id %}">Add new entry</a>
-        <a href="{% url 'learning_logs:study' topic.id %}">Study this topic</a>
-    </p>
-
+    
+    <p><a href="{% url 'learning_logs:topic' topic.id %}"> Return to topic page</a></p>
+    
     {% for entry in entries %}
         <div class="card mb-3">
             <!-- Card header with timestamp and edit link -->
             <h4 class="card-header">
-                {{ entry.date_added|date:'M d, Y H:i' }}
+                <a> Topic </a>
                 <small><a href="{% url 'learning_logs:edit_entry' entry.id %}">
                  edit entry</a></small>
             </h4>
@@ -24,5 +18,8 @@
     {% empty %}
         <p>There are no entries for this topic yet.</p>
     {% endfor %}
-
+    <p>
+        <a href="{% url 'learning_logs:study' topic.id %}"> Previous entry</a>
+        <a href="{% url 'learning_logs:study' topic.id %}"> Next entry</a>
+    </p>
 {% endblock content %}

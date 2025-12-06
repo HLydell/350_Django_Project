@@ -4,7 +4,7 @@
 
   <p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
 
-  <p>Edit entry:</p>
+  <p>Edit entry (Enter question in first box, answer in second box)::</p>
 
   <form action="{% url 'learning_logs:edit_entry' entry.id %}" method='post'>
     {% csrf_token %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import Http404
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
@@ -23,7 +24,8 @@ def topic(request, topic_id):
     # Make sure the topic belongs to the current user.
     if topic.owner != request.user:
         raise Http404
-
+    topic.study_count += 1
+    topic.save()
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
     return render(request, 'learning_logs/topic.html', context)
@@ -35,8 +37,13 @@ def study(request, topic_id):
     # Make sure the topic belongs to the current user.
     if topic.owner != request.user:
         raise Http404
-    entries = topic.entry_set.order_by('?')
-    context = {'topic': topic, 'entries': entries}
+
+    entries = topic.entry_set.order_by('-date_added') #randomize entries for studying
+    entries_paging = Paginator(entries, 1)
+
+    page_number = request.GET.get('page')
+    page_obj = entries_paging.get_page(page_number)
+    context = {'topic': topic, 'page_obj': page_obj}
     return render(request, 'learning_logs/study.html', context)
 
 @login_required

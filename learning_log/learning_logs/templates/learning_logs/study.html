@@ -1,0 +1,41 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+    
+    <p><a href="{% url 'learning_logs:topic' topic.id %}"> Finish studying</a></p>
+    
+    {% for entry in page_obj %}
+        <div class="card mb-3">
+            <h4 class="card-header">
+                {{entry.question}} 
+                <small><a href="{% url 'learning_logs:edit_entry' entry.id %}">
+                 edit entry</a></small>
+            </h4>
+            <div class="card-body">{{ entry.text|linebreaks }}</div>
+        </div>
+    {% empty %}
+        <p>There are no entries for this topic yet.</p>
+    {% endfor %}
+    
+    <div class="pagination">
+        <span class="step-links">
+            <span class="current">
+                Question {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} | 
+            </span>
+
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% else %}
+                previous {#formating#}
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% else %}
+                next
+            {% endif %}
+
+            <p><a href="?page=1"> Go to start</a></p>
+        </span>
+    </div>
+{% endblock content %}
